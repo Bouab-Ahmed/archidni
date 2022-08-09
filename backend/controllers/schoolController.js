@@ -1,16 +1,16 @@
-const School = require("../models/schoolModel");
-const errorHandler = require("../utils/errorHandler");
-const catchAsyncError = require("../middleware/catchAsyncError");
-const ApiFeatures = require("../utils/apiFeatures");
-const cloudinary = require("cloudinary");
+const School = require('../models/schoolModel');
+const errorHandler = require('../utils/errorHandler');
+const catchAsyncError = require('../middleware/catchAsyncError');
+const ApiFeatures = require('../utils/apiFeatures');
+const cloudinary = require('cloudinary');
 
 //Create School --Admin
 
 exports.createSchool = catchAsyncError(async (req, res, next) => {
   const schoolImg = await cloudinary.v2.uploader.upload(req.body.image, {
-    folder: "schoolsImg",
+    folder: 'schoolsImg',
     width: 150,
-    crop: "scale",
+    crop: 'scale',
   });
   // const schoolDoc = await cloudinary.v2.uploader.upload(req.body.doc, {
   //   folder: "schoolsDoc",
@@ -39,7 +39,7 @@ exports.createSchool = catchAsyncError(async (req, res, next) => {
 
 //Get All Schools
 exports.getAllSchools = catchAsyncError(async (req, res, next) => {
-  const resultParPage = 2;
+  const resultParPage = 100;
   const schoolsCount = await School.countDocuments();
   const apiFeature = new ApiFeatures(School.find(), req.query)
     .search()
@@ -64,16 +64,16 @@ exports.updateSchool = catchAsyncError(async (req, res, next) => {
 
   let school = await School.findById(id);
   if (!school) {
-    return next(new errorHandler("School not found", 404));
+    return next(new errorHandler('School not found', 404));
   }
   if (req.body.image !== undefined) {
     const imageId = school.image.public_id;
     await cloudinary.v2.uploader.destroy(imageId);
   }
   const schoolImg = await cloudinary.v2.uploader.upload(req.body.image, {
-    folder: "schoolsImg",
+    folder: 'schoolsImg',
     width: 150,
-    crop: "scale",
+    crop: 'scale',
   });
 
   const image = {
@@ -111,7 +111,7 @@ exports.deleteSchool = catchAsyncError(async (req, res, next) => {
 
   let school = await School.findById(id);
   if (!school) {
-    return next(new errorHandler("school not found", 404));
+    return next(new errorHandler('school not found', 404));
   }
   // const imageId = await school.image.public_id;
   // const docId = await school.doc.public_id;
@@ -121,7 +121,7 @@ exports.deleteSchool = catchAsyncError(async (req, res, next) => {
   await school.remove();
   res.status(200).json({
     success: true,
-    message: "school deleted successfully",
+    message: 'school deleted successfully',
   });
 });
 
@@ -233,9 +233,9 @@ exports.createStudentRequest = catchAsyncError(async (req, res, next) => {
     const imageId = isAddedRequest.stdReqImg.public_id;
     await cloudinary.v2.uploader.destroy(imageId);
     const requestImg = await cloudinary.v2.uploader.upload(req.body.stdReqImg, {
-      folder: "stdImages",
+      folder: 'stdImages',
       width: 150,
-      crop: "scale",
+      crop: 'scale',
     });
 
     const reqImg = {
@@ -245,9 +245,9 @@ exports.createStudentRequest = catchAsyncError(async (req, res, next) => {
     student.stdReqImg = reqImg;
   } else {
     const requestImg = await cloudinary.v2.uploader.upload(req.body.stdReqImg, {
-      folder: "studentRequestImgs",
+      folder: 'studentRequestImgs',
       width: 150,
-      crop: "scale",
+      crop: 'scale',
     });
 
     const reqImg = {
@@ -268,7 +268,7 @@ exports.createStudentRequest = catchAsyncError(async (req, res, next) => {
 exports.getStudentRequests = catchAsyncError(async (req, res, next) => {
   const school = await School.findById(req.query.id);
   if (!school) {
-    return next(new errorHandler("School Not Found", 404));
+    return next(new errorHandler('School Not Found', 404));
   }
   res.status(200).json({
     success: true,
@@ -280,7 +280,7 @@ exports.getStudentRequests = catchAsyncError(async (req, res, next) => {
 exports.deleteStudentRequest = catchAsyncError(async (req, res, next) => {
   const school = await School.findById(req.query.schoolId);
   if (!school) {
-    return next(new errorHandler("school Not Found", 404));
+    return next(new errorHandler('school Not Found', 404));
   }
   let imgId;
   const img = school.studentRequests.filter((std) => {
@@ -298,7 +298,7 @@ exports.deleteStudentRequest = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "request deleted successfully",
+    message: 'request deleted successfully',
   });
 });
 
@@ -345,9 +345,9 @@ exports.createStudent = catchAsyncError(async (req, res, next) => {
     const imageId = isAddedRequest.stdImg.public_id;
     await cloudinary.v2.uploader.destroy(imageId);
     const requestImg = await cloudinary.v2.uploader.upload(req.body.stdImg, {
-      folder: "stdImages",
+      folder: 'stdImages',
       width: 150,
-      crop: "scale",
+      crop: 'scale',
     });
 
     const reqImg = {
@@ -357,9 +357,9 @@ exports.createStudent = catchAsyncError(async (req, res, next) => {
     student.stdImg = reqImg;
   } else {
     const requestImg = await cloudinary.v2.uploader.upload(req.body.stdImg, {
-      folder: "stdImages",
+      folder: 'stdImages',
       width: 150,
-      crop: "scale",
+      crop: 'scale',
     });
 
     const reqImg = {
@@ -380,7 +380,7 @@ exports.createStudent = catchAsyncError(async (req, res, next) => {
 exports.getAllStudent = catchAsyncError(async (req, res, next) => {
   const school = await School.findById(req.query.id);
   if (!school) {
-    return next(new errorHandler("School Not Found", 404));
+    return next(new errorHandler('School Not Found', 404));
   }
   res.status(200).json({
     success: true,
@@ -392,7 +392,7 @@ exports.getAllStudent = catchAsyncError(async (req, res, next) => {
 exports.deleteSingleStudent = catchAsyncError(async (req, res, next) => {
   const school = await School.findById(req.query.schoolId);
   if (!school) {
-    return next(new errorHandler("school Not Found", 404));
+    return next(new errorHandler('school Not Found', 404));
   }
   let stdImgId;
   const img = school.students.filter((student) => {
@@ -410,6 +410,6 @@ exports.deleteSingleStudent = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "request deleted successfully",
+    message: 'request deleted successfully',
   });
 });
